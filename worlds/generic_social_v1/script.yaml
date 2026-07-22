@@ -1,0 +1,91 @@
+# Scripted-mode schedule for generic_social_v1.
+#
+# `facts` are the golden truth: decided here, before any rollout runs. Each is
+# planted at an explicit step. Steps beyond a run's num_steps are skipped.
+# `checkpoint: true` tags the memory checkpoints referenced by trajectory verification.
+#
+# `noise_templates` fill the remaining turns with plausible, irrelevant chatter so
+# the memory system must separate the ~handful of signals from the noise.
+
+facts:
+  - fact_id: f_pet
+    step: 5
+    subject: alex
+    kind: pet
+    checkpoint: true
+    # {answer} is substituted into the template so the emitted content always
+    # contains the answer string the verifier checks for.
+    answer: a cat named Miso
+    content: "Oh, big news — I adopted {answer} last weekend!"
+    query_noun: pet
+
+  - fact_id: f_job
+    step: 20
+    subject: sam
+    kind: job
+    checkpoint: true
+    answer: the pediatric ward
+    content: "I finally transferred to {answer} at the hospital, day shifts now."
+    query_noun: ward
+
+  - fact_id: f_move
+    step: 35
+    subject: jordan
+    kind: relocation
+    checkpoint: true
+    answer: Lisbon
+    content: "I decided it — I'm relocating to {answer} in the fall for a design gig."
+    query_noun: city
+
+  - fact_id: f_hobby
+    step: 60
+    subject: alex
+    kind: hobby
+    checkpoint: false
+    answer: pottery classes
+    content: "Started taking {answer} on Thursdays, my hands are a mess but it's fun."
+    query_noun: hobby
+
+  - fact_id: f_car
+    step: 80
+    subject: sam
+    kind: vehicle
+    checkpoint: true
+    answer: a used blue Subaru
+    content: "Bought {answer} finally, no more relying on the bus for night shifts."
+    query_noun: car
+
+# Pure filler: trivially irrelevant. Selected with probability `noise_ratio`.
+noise_templates:
+  - "Anyone want to grab lunch later this week?"
+  - "This weather has been all over the place lately."
+  - "Ugh, my inbox is completely out of control today."
+  - "Did you catch that show everyone's talking about?"
+  - "Running a bit late, traffic is brutal this morning."
+  - "Coffee machine at the office is broken again."
+  - "Thinking about repainting the living room, no idea what color."
+  - "My phone battery has been draining so fast lately."
+  - "Anyone have a good recipe for banana bread?"
+  - "The gym was packed today, could barely find a machine."
+
+# Distractors: personal-sounding but NOT gold facts. Selected with probability
+# (1 - noise_ratio). These are hard negatives — they stop an agent from succeeding
+# just by finding "the one substantive-looking message". They must never touch a gold
+# fact's answer or the negation vocabulary (dog / wedding / tattoo); ledger_audit checks.
+distractor_templates:
+  - "Might finally replace my ancient laptop, the fan sounds like a jet engine."
+  - "Been trying to get back into running, managed 3k without dying."
+  - "My sister's visiting next month, need to clear out the spare room."
+  - "Signed up for a free online course, no idea if I'll finish it."
+  - "Thinking of switching phone plans, the current one is a ripoff."
+  - "Finally fixed that leaky tap I'd been ignoring for weeks."
+  - "Considering a short trip somewhere quiet, nothing booked yet."
+
+# Topic seeds for LLM-mode distractor turns (same role as distractor_templates).
+distractor_topics:
+  - "an old laptop that's finally dying"
+  - "getting back into running"
+  - "a relative visiting next month"
+  - "an online course you signed up for"
+  - "a mildly annoying household repair"
+  - "a vague idea about a short trip"

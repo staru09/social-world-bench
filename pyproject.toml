@@ -1,0 +1,32 @@
+[project]
+name = "social-world-bench"
+version = "0.1.0"
+description = "A benchmark for evaluating agent memory systems via synthetic social world rollouts"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "click>=8.1",
+    "openai>=1.30",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+mem0 = ["mem0ai>=0.1"]
+honcho = ["honcho-ai>=2.0"]
+supermemory = ["supermemory>=3.0"]
+
+[project.scripts]
+swb = "swb.cli:cli"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/swb"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

@@ -1,0 +1,50 @@
+world_id: generic_social_v1
+
+peers:
+  - id: alex
+    name: Alex
+    persona: >
+      Alex is a 29-year-old software engineer who recently moved apartments and
+      is enthusiastic about cooking. Warm, talkative, and quick to share personal news.
+    traits: [warm, talkative, foodie]
+  - id: sam
+    name: Sam
+    persona: >
+      Sam is a 34-year-old nurse working night shifts, pragmatic and a little dry.
+      Cares deeply about close friends and remembers the small details of their lives.
+    traits: [pragmatic, dry, loyal]
+  - id: jordan
+    name: Jordan
+    persona: >
+      Jordan is a 26-year-old freelance graphic designer, curious and a bit scattered,
+      always juggling side projects and travel plans.
+    traits: [curious, scattered, creative]
+
+relationships:
+  - from_peer: alex
+    to_peer: jordan
+    type: roommate
+    strength: 0.9
+  - from_peer: jordan
+    to_peer: alex
+    type: roommate
+    strength: 0.9
+  - from_peer: alex
+    to_peer: sam
+    type: friend
+    strength: 0.8
+  - from_peer: sam
+    to_peer: alex
+    type: friend
+    strength: 0.8
+
+rules:
+  allowed_speakers: null          # all peers may speak
+  noise_ratio: 0.65               # ~65% of turns are irrelevant chatter
+  max_turns_per_session_block: 8
+
+rollout:
+  num_steps: 100
+  rng_seed: 42
+  llm_model: openai/gpt-4o-mini
+  llm_temperature: 0.7
